@@ -1,8 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
-  fetchEmail();
+  fetchIpAddress();
 
-  async function fetchEmail() {
-    const url = "https://quack.duckduckgo.com/api/email/addresses";
+  async function fetchIpAddress() {
+    const dnsUrl = "https://dns.google/resolve?name=quack.duckduckgo.com&type=A";
+    
+    try {
+      const dnsResponse = await fetch(dnsUrl);
+      const dnsData = await dnsResponse.json();
+
+      if (dnsResponse.status === 200 && dnsData.Answer && dnsData.Answer.length > 0) {
+        const ipAddress = dnsData.Answer[0].data;
+        const emailApiUrl = `https://${ipAddress}/api/email/addresses`;
+        fetchEmail(emailApiUrl);
+      } else {
+        const resultDiv = document.getElementById("result");
+        resultDiv.textContent = "Error: Unable to resolve IP address.";
+      }
+    } catch (error) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = "Error: " + error.message;
+    }
+  }
+
+  async function fetchEmail(apiUrl) {
     const headers = {
       "Authorization": "Bearer tkqyrvpmclswd0tm7i6qquwsokjibf6owfg6udvdgvrnq6jip9wurnpk7rupbo",
       "User-Agent": "ddg_android/5.166.0 (com.duckduckgo.mobile.android; Android API 29)",
@@ -11,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     try {
-      const response = await fetch(url, { headers });
+      const response = await fetch(apiUrl, { headers });
       const data = await response.json();
 
       if (response.status === 201) {
