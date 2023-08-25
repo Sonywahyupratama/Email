@@ -7,14 +7,15 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/icon16.png",
-      "48": "images/icon48.png",
-      "128": "images/icon128.png"
+      "16": "images/1689425460488.jpg
+",
+      "48": "images/1692986605460.jpg",
+      "128": "images/IMG_20230720_194704_497.jpg"
     }
   },
   "icons": {
-    "16": "images/icon16.png",
-    "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "16": "images/IMG_20230720_194704_497.jpg",
+    "48": "images/IMG_20230720_194704_497.jpg",
+    "128": "images/IMG_20230720_194704_497.jpg"
   }
 }
