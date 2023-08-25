@@ -29,20 +29,37 @@ function getRequest(details) {
                         
                         // Copy email to clipboard
                         copyToClipboard(newAddress);
+                        
+                        // Show success message
+                        showSuccessMessage();
+                    } else {
+                        showErrorMessage("Failed to get new email address.");
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
+                    showErrorMessage("An error occurred while fetching email address.");
                 });
             }
         }
     }
 }
 
-// Rest of your existing code...
+// Your whatIsIt function...
 
-function copyToClipboard(text) {
-    // Your copyToClipboard function implementation
+// Your copyToClipboard function...
+
+function showSuccessMessage() {
+    document.getElementById("result").textContent = "Email address copied and converted successfully!";
+    setTimeout(() => {
+        document.getElementById("result").textContent = "";
+    }, 3000); // Hide the message after 3 seconds
 }
+
+function showErrorMessage(message) {
+    document.getElementById("result").textContent = "Error: " + message;
+}
+
+// Rest of your existing code...
 
 // Your existing onBeforeRequest listener...
