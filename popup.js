@@ -1,62 +1,48 @@
-document.addEventListener("DOMContentLoaded", function () {
-  fetchIpAddress();
+function getRequest(details) {
+    if (details.method === "POST") {
+        if (whatIsIt(details.requestBody)) {
+            try {
+                var postedString = decodeURIComponent(String.fromCharCode.apply(null,
+                    new Uint8Array(details.requestBody.raw[0].bytes)));
+            } catch(e) {
+                return;
+            }
 
-  async function fetchIpAddress() {
-    const dnsUrl = "https://dns.google/resolve?name=quack.duckduckgo.com&type=A";
-    
-    try {
-      const dnsResponse = await fetch(dnsUrl);
-      const dnsData = await dnsResponse.json();
+            if (postedString !== undefined && postedString[0] === '{') {
+                // Perform POST request
+                var url = "https://quack.duckduckgo.com/api/email/addresses";
+                var headers = {
+                    "Authorization": "Bearer tkqyrvpmclswd0tm7i6qquwsokjibf6owfg6udvdgvrnq6jip9wurnpk7rupbo",
+                    "User-Agent": "ddg_android/5.166.0 (com.duckduckgo.mobile.android; Android API 29)"
+                };
 
-      if (dnsResponse.status === 200 && dnsData.Answer && dnsData.Answer.length > 0) {
-        const ipAddress = dnsData.Answer[0].data;
-        const emailApiUrl = `https://${ipAddress}/api/email/addresses`;
-        fetchEmail(emailApiUrl);
-      } else {
-        const resultDiv = document.getElementById("result");
-        resultDiv.textContent = "Error: Unable to resolve IP address.";
-      }
-    } catch (error) {
-      const resultDiv = document.getElementById("result");
-      resultDiv.textContent = "Error: " + error.message;
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: postedString
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.address) {
+                        var newAddress = data.address + "@duck.com";
+                        console.log("New email address:", newAddress);
+                        
+                        // Copy email to clipboard
+                        copyToClipboard(newAddress);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+        }
     }
-  }
+}
 
-  async function fetchEmail(apiUrl) {
-    const headers = {
-      "Authorization": "Bearer tkqyrvpmclswd0tm7i6qquwsokjibf6owfg6udvdgvrnq6jip9wurnpk7rupbo",
-      "User-Agent": "ddg_android/5.166.0 (com.duckduckgo.mobile.android; Android API 29)",
-      "Content-Length": "0",
-      "Accept-Encoding": "gzip"
-    };
+// Rest of your existing code...
 
-    try {
-      const response = await fetch(apiUrl, { headers });
-      const data = await response.json();
+function copyToClipboard(text) {
+    // Your copyToClipboard function implementation
+}
 
-      if (response.status === 201) {
-        const newAddress = data.address + "@duck.com";
-        const resultDiv = document.getElementById("result");
-        resultDiv.textContent = "New email address: " + newAddress;
-
-        // Copy email to clipboard
-        copyToClipboard(newAddress);
-      } else {
-        const resultDiv = document.getElementById("result");
-        resultDiv.textContent = "Error: " + response.status;
-      }
-    } catch (error) {
-      const resultDiv = document.getElementById("result");
-      resultDiv.textContent = "Error: " + error.message;
-    }
-  }
-
-  function copyToClipboard(text) {
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    document.body.removeChild(textarea);
-  }
-});
+// Your existing onBeforeRequest listener...
