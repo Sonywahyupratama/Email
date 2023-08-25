@@ -5,24 +5,29 @@ document.addEventListener("DOMContentLoaded", function () {
     const url = "https://quack.duckduckgo.com/api/email/addresses";
     const headers = {
       "Authorization": "Bearer tkqyrvpmclswd0tm7i6qquwsokjibf6owfg6udvdgvrnq6jip9wurnpk7rupbo",
-      // Add other headers here
+      "User-Agent": "ddg_android/5.166.0 (com.duckduckgo.mobile.android; Android API 29)",
+      "Content-Length": "0",
+      "Accept-Encoding": "gzip"
     };
 
     try {
       const response = await fetch(url, { headers });
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.status === 201) {
         const newAddress = data.address + "@duck.com";
-        document.getElementById("result").textContent = "New email address: " + newAddress;
+        const resultDiv = document.getElementById("result");
+        resultDiv.textContent = "New email address: " + newAddress;
 
         // Copy email to clipboard
         copyToClipboard(newAddress);
       } else {
-        document.getElementById("result").textContent = "Error: " + response.status;
+        const resultDiv = document.getElementById("result");
+        resultDiv.textContent = "Error: " + response.status;
       }
     } catch (error) {
-      document.getElementById("result").textContent = "Error: " + error.message;
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = "Error: " + error.message;
     }
   }
 
