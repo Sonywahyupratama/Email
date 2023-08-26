@@ -4,8 +4,7 @@
   "version": "1.0",
   "permissions": [
     "webRequest",
-    "activeTab",
-    "https://quack.duckduckgo.com/*"
+    "activeTab"
   ],
   "background": {
     "service_worker": "background.js"
