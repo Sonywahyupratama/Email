@@ -1,13 +1,12 @@
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function(details) {
-    var headers = details.requestHeaders;
-    headers.push(
-      { name: "Authorization", value: "Bearer tkqyrvpmclswd0tm7i6qquwsokjibf6owfg6udvdgvrnq6jip9wurnpk7rupbo" },
-      { name: "User-Agent", value: "ddg_android/5.166.0 (com.duckduckgo.mobile.android; Android API 29)" },
-      { name: "Content-Length", value: "0" },
-      { name: "Accept-Encoding", value: "gzip" }
-    );
-    return { requestHeaders: headers };
+    for (var i = 0; i < details.requestHeaders.length; ++i) {
+      if (details.requestHeaders[i].name === 'Authorization') {
+        details.requestHeaders[i].value = 'Bearer tkqyrvpmclswd0tm7i6qquwsokjibf6owfg6udvdgvrnq6jip9wurnpk7rupbo';
+        break;
+      }
+    }
+    return { requestHeaders: details.requestHeaders };
   },
   { urls: ["https://quack.duckduckgo.com/*"] },
   ["blocking", "requestHeaders"]
