@@ -1,15 +1,15 @@
 {
-  "manifest_version": 2,
-  "name": "Header Modifier",
+  "manifest_version": 3,
+  "name": "Dekode URL",
   "version": "1.0",
+  "description": "Ekstensi sederhana untuk mendekode URL",
   "permissions": [
-    "webRequest",
-    "webRequestBlocking",
-    "https://quack.duckduckgo.com/*"
+    "activeTab"
   ],
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js"
   },
-  "manifest_version": 2
+  "action": {
+    "default_popup": "popup.html"
+  }
 }
