@@ -1,7 +1,3 @@
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request.email) {
-      document.getElementById("email").textContent = request.email;
-    }
-  }
-);
+document.getElementById('decodeButton').addEventListener('click', function () {
+  chrome.runtime.sendMessage({ action: 'decodeURL' });
+});
